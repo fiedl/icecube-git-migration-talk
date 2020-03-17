@@ -9,11 +9,11 @@
 %\geometry{paperwidth=\mypaperwidth,paperheight=0.625\mypaperwidth} % 16:10
 \geometry{paperwidth=\mypaperwidth,paperheight=0.7\mypaperwidth}
 
-\title[Monopole-Generator Review, \url{https://github.com/fiedl/monopole-generator/issues/1}]{Update on the Monopole-Generator Review}
-\subtitle{Software Call 2019-10-30}
-\date{\today \\ \vspace*{2mm} \tiny{Document 2019-eeQua1zo} \normalsize}
+\title[Proposal: Minimal Migration of IceTrayCombo from SVN to Git, \url{https://github.com/fiedl/icecube-git-migration/issues/9}]{Proposal: Minimal Migration of IceTrayCombo from SVN to Git}
+\subtitle{Software Call 2019-03-17}
+\date{\today \\ \vspace*{2mm} \tiny{Document 2020-nie9Ook9} \normalsize}
 
-\author[Sebastian Fiedlschuster]{Sebastian Fiedlschuster \\ \small\url{https://github.com/fiedl/monopole-generator/issues/1} \\
+\author[Sebastian Fiedlschuster]{Sebastian Fiedlschuster \\ \small\url{https://github.com/fiedl/icecube-git-migration} \\
 \small\url{sebastian.fiedlschuster@fau.de}}
 \institute{Erlangen Centre for Astroparticle Physics}
 
@@ -51,16 +51,37 @@
 
 \placelogofalse
 
+\newcommand\done{\checkmark\xspace}
+\newcommand\inprogress{$\Rightarrow$\xspace}
+\newcommand\tobedone{$\square$\xspace}
+
+\newcommand\question[1]{\colorbox{blue!10}{\fbox{\ \ \questionicon \ \ #1}}}
+
 \section{Introduction}
 \input{text/prefix}
+\input{text/motivation}
 
-\section{Review state}
-\input{text/review}
+\section{Proposal}
+\subsection{Goal}\input{text/goal}
+\subsection{Choices}\input{text/choices}
+\subsection{Pros and Cons}\input{text/pros}
+\input{text/cons}
+\subsection{Tests}\input{text/tests}
+
+\subsection{Planned steps}
+\input{text/local_changes}
+\input{text/steps_to_goal}
+\input{text/steps_after_goal}
 
 \section{Conclusion}
+\input{text/next_steps}
 \input{text/thanks}
 
-%\appendix
-%\section{Backup slides}
+\appendix
+\section{Backup slides}
+\input{text/wishlist_nathan}
+\input{text/wishlist_erik}
+\input{text/wishlist_alex}
+\input{text/discussions}
 
 \end{document}
