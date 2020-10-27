@@ -234,10 +234,10 @@
 
 %>
 
-\newcommand\goals{\mbox{\tikz{\draw[RedArc] (0,0) rectangle ++(.8,-.3)++(0,.2);} \textbf{goals}}\xspace}
-\newcommand\choices{\mbox{\tikz{\draw[SkyArc] (0,0) rectangle ++(.8,-.3)++(0,.2);} \textbf{choices}}\xspace}
 \newcommand\choice[1]{\textcolor{skybox}{#1}}
 \newcommand\goal[1]{\textcolor{ocre}{#1}}
+\newcommand\goals{\mbox{\tikz{\draw[RedArc] (0,0) rectangle ++(.8,-.3)++(0,.2);} \goal{goals}}\xspace}
+\newcommand\choices{\mbox{\tikz{\draw[SkyArc] (0,0) rectangle ++(.8,-.3)++(0,.2);} \choice{choices}}\xspace}
 \newcommand\works{\cmark}
 \newcommand\fails{\xmark}
 
@@ -257,7 +257,6 @@
 \end{frame}
 
 \section{Goals and Choices}
-\frame{\sectionpage}
 
 \begin{frame}[fragile]{Choices}
 
@@ -315,7 +314,6 @@
 \end{frame}
 
 \section{Connecting Goals and Choices}
-\frame{\sectionpage}
 
 \begin{frame}[fragile]{Goals: Bisection}
   \label{slide:bisection}
@@ -496,7 +494,7 @@
   \begin{column}{0.55\textwidth}
     \header{What is reproducibility by commit id?}
     \begin{itemize}
-      \item Git uses \textbf{unique commit ids}, e.g. `e3f64d9` to reference repository state.
+      \item Git uses \alert{unique commit ids}, e.g. `e3f64d9` to reference repository state.
       \item If one does know the commit id, one can reproduce the repository state regardless of the branch the commit has been made on.
       \item Idea: Have icetray output and log the commit id of the combo repository along datetime when executing. Encourage people to commit before executing noteworthy runs.
       \item This way, the run results can be reproduced using the respective commit ids of combo and the script's repo.
@@ -861,7 +859,6 @@
 \end{frame}
 
 \section{Conclusions}
-\frame{\sectionpage}
 
 \begin{frame}[fragile]{Conclusions}
 
