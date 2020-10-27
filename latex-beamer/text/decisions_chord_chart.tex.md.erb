@@ -250,8 +250,12 @@
     \begin{itemize}
       \item We do have to make some \choices regarding the upcoming git migration.
       \item We have to agree on what \goals we want to pursue.
-      \item Some of the goals help us to narrow down the options for our choices.
+      \item Some of the goals help us to \alert{narrow down the options} for our choices.
     \end{itemize}
+
+    \vspace{2em}
+    \small \follows \hyperlink{slide:conclusions}{Go straight to the conclusions}
+
   \end{column}
 
 \end{frame}
@@ -338,8 +342,8 @@
     \header{What is bisection?}
     \begin{itemize}
       \item Consider a feature that you know has worked in commit `A`, but fails in commit `E`.
-      \item There are a lot of commits in between. Where did it break?
-      \item Idea: Write a test script and run it with `git bisect` to efficiently find the commit that breaks the test script.
+      \item There are a lot of commits in between. \alert{Where did it break?}
+      \item Idea: Write a \alert{test script} and run it with `git bisect` to efficiently find the commit that breaks the test script.
     \end{itemize}
   \end{column}
 
@@ -384,7 +388,7 @@
     \header{What is `git blame`?}
     \begin{itemize}
       \item Suppose, you are on `master` and find a strange code line in `code.py` you can't make sense of.
-      \item Idea: To get an idea of the context the line was introduced in, run `git blame code.py`, which identifies the commit `D` that has introduced the line.
+      \item Idea: To get an idea of the \alert{context the line was introduced} in, run `git blame code.py`, which identifies the commit `D` that has introduced the line.
       \item Now look at the commit message of commit `D` and the other changes made in this commit.
     \end{itemize}
   \end{column}
@@ -423,7 +427,7 @@
   \begin{column}{0.6\textwidth}
     \header{What is automatic conflict resolution?}
     \begin{itemize}
-      \item Git uses a \textbf{directed acyclic graph (DAG)} to store which commits a new commit is based on. This makes git very powerful when it comes to resolving merge conflicts automatically.
+      \item Git uses a \alert{directed acyclic graph (DAG)} to store which commits a new commit is based on. This makes git very powerful when it comes to resolving merge conflicts automatically.
       \item Suppose, an error is introduced in the `feature-a` branch. The `feature-b` branch is based on the `feature-a` branch and does also include this error.
         The error is later fixed in `feature-a` and the fix is merged into `master`.
       \item[\fails] Without the DAG information, git would re-introduce the already fixed error into `master` when merging `feature-b`
@@ -450,8 +454,7 @@
         \item[\fails] \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow squash merges} \\
         because rebase commits and squash commits do not keep the graph dependency information to the commits in the feature branch. If one would base work onto commits from the feature branch, conflicts could not be resolved automatically, later.
 
-        \vspace{1em}
-        \footnotesize Experiment: \url{https://github.com/fiedl/icecube-git-migration/issues/15}
+        \tiny \vspace{1em} Experiment: \url{https://github.com/fiedl/icecube-git-migration/issues/15}
 
         \begin{center}
           \includegraphics[width=0.7\columnwidth]{img/squash-test}
@@ -496,7 +499,7 @@
     \begin{itemize}
       \item Git uses \alert{unique commit ids}, e.g. `e3f64d9` to reference repository state.
       \item If one does know the commit id, one can reproduce the repository state regardless of the branch the commit has been made on.
-      \item Idea: Have icetray output and log the commit id of the combo repository along datetime when executing. Encourage people to commit before executing noteworthy runs.
+      \item Idea: Have icetray output and \alert{log the commit id} of the combo repository along datetime when executing. Encourage people to commit before executing noteworthy runs.
       \item This way, the run results can be reproduced using the respective commit ids of combo and the script's repo.
     \end{itemize}
   \end{column}
@@ -525,7 +528,7 @@
   \label{slide:changelogs}
 
   \begin{columns}[t]
-  \begin{column}{0.5\textwidth}
+  \begin{column}{0.4\textwidth}
     \header{Bad changelog}
 
     \begin{Verbatim}[fontsize=\tiny]
@@ -536,7 +539,7 @@
     \end{Verbatim}
 
   \end{column}
-  \begin{column}{0.5\textwidth}
+  \begin{column}{0.6\textwidth}
     \header{Better changelog}
 
     \begin{Verbatim}[fontsize=\tiny]
@@ -565,7 +568,7 @@
     \end{Verbatim}
 
     \vspace{1em}
-    Even better would be adding links, code highlighting, etc.
+    Even better would be adding \alert{links}, code \alert{highlighting}, etc.
   \end{column}
   \end{columns}
 
@@ -586,7 +589,7 @@
         `git log --first-parent`.
 
         We could also generate `CHANGELOG.md` files for the combo repo and its project directories
-        by tying a \textit{changelog generator} into a \textit{github action}.
+        by tying a \hyperlink{https://github.com/topics/changelog-generator}{changelog generator} into a \textit{github action}.
     \end{itemize}
   \end{column}
 
@@ -602,7 +605,7 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \only<1>{
-        \item An \goal{easy workflow} would be one that is easy and fast to learn by people new to icecube or git.
+        \item An \goal{easy workflow} would be one that is \alert{easy and fast to learn by people} new to icecube or git.
 
         \item[\fails] \goal{Easy workflow} $\rightarrow \neg$ \choice{Require strict git flow} \\
           because newcomers would need to lookup many conventions and would be required to think about these and
@@ -660,8 +663,8 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \only<1>{
-        \item A \goal{robust workflow} would be one that prevents regular users from causing damage that
-          would require admins to perform fixes or clean-ups.
+        \item A \goal{robust workflow} would be one that \alert{prevents regular users from causing damage} that
+          would require admins to perform \alert{fixes or clean-ups}.
 
         \item[\fails] \goal{Robust workflow} $\rightarrow \neg$ \choice{Allow direct pushes to master for all users}
         \begin{itemize}
@@ -693,7 +696,7 @@
   \end{column}
   \begin{column}{0.55\textwidth}
     \begin{itemize}
-        \item A \goal{quick migration} would be one that enables everyone in icecube to use the github repository, contribute code, issues, reviews, etc. soon without risks.
+        \item A \goal{quick migration} would be one that enables everyone in icecube to \alert{use the github repository}, contribute code, \alert{issues}, \alert{reviews}, etc. \alert{soon without risks}.
 
         \item[\fails] When requiring \choice{strict git flow}, everyone would need to learn the git-flow conventions before contributing.
 
@@ -732,6 +735,7 @@
 \begin{frame}[fragile]{Goals: Avoid renaming the `master` branch}
   \label{slide:rename_master}
 
+  \begin{columns}
   \begin{column}{0.5\textwidth}
     \begin{tikzpicture}
       % Git merge
@@ -773,17 +777,18 @@
     \header{What is renaming the `master` branch?}
 
     \begin{itemize}
-      \item<1>Consider a `master` branch and a `feature` branch.
-      \item<2>The author of the `feature` branch pulls in the `master` branch to get the changes that have been committed to the `master` branch in the meantime:
+      \item<1->Consider a `master` branch and a `feature` branch.
+      \item<2->The author of the `feature` branch pulls in the `master` branch to get the changes that have been committed to the `master` branch in the meantime:
 
         `git checkout feature` \\
         `git merge master`
-      \item<3> The author of the `feature` branch merges his feature branch in to `master`, which would be a fast-forward merge at this point.
+      \item<3-> The author of the `feature` branch merges his feature branch in to `master`, which would be a fast-forward merge at this point.
 
         `git checkout master` \\
         `git merge feature`
     \end{itemize}
   \end{column}
+  \end{columns}
 
 \end{frame}
 
@@ -811,7 +816,7 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \item Using \goal{continuous tests} that run on each commit and on each \choice{pull request} before merging help
-        to avoid or resolve issues from landing in the `master` branch.
+        to avoid or \alet{resolve issues before landing in the `master`} branch.
       \item Test results are archived and can be accessed from the commits or pull requests.
 
       \item[\fails] \choice{Rewriting history} destroys the references between commits and the \goal{continuous test} runs. So we would lose the information on which commits the tests succeeded. Or we would have to re-run the tests on all commits of the new history.
@@ -861,6 +866,7 @@
 \section{Conclusions}
 
 \begin{frame}[fragile]{Conclusions}
+  \label<4>{slide:conclusions}
 
   \begin{column}{0.45\textwidth}
     \only<1>{
@@ -888,7 +894,8 @@
       \item<3-> Aiming for a \goal{quick migration} and an \goal{easy-to-learn workflow}, we should probably go with \choice{github's standard pull-request workflow} rather than a \choice{strict git-flow workflow}.
         \tiny (Slides \ref{slide:easy_workflow}, \ref{slide:quick_migration}) \normalsize
 
-      \item<4-> The other goals considered on these slides are compatible with these choices.
+      \item<4->
+        The other goals considered on these slides are compatible with these choices.
     \end{itemize}
   \end{column}
 
