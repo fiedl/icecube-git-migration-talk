@@ -1,7 +1,8 @@
 \usepackage{pgfshade}
+\usepackage{pifont}
 
 %\usetheme{Warsaw}
-\usetheme{Frankfurt}
+\usetheme{Frankfurt} %\usetheme{metropolis}
 %\useoutertheme{infolines}
 %\setbeamertemplate{footline}[infolines theme]
 %\setbeamertemplate{footline}[text line]{%
@@ -33,6 +34,12 @@
 \beamertemplatenavigationsymbolsempty
 
 %\setbeamertemplate{footline}[author, title, frame number]
+
+% https://tex.stackexchange.com/a/42620/70789
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+
+\newcommand\header[1]{{\large\textbf{#1}\par}}
 
 \newcommand{\vtiny}{\fontsize{6}{1}\selectfont}
 \usepackage[absolute,overlay]{textpos}

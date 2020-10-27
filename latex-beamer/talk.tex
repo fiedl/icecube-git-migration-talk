@@ -6,12 +6,13 @@
 %\setbeameroption{show notes}
 
 \newlength{\mypaperwidth}\setlength{\mypaperwidth}{200mm}
-%\geometry{paperwidth=\mypaperwidth,paperheight=0.625\mypaperwidth} % 16:10
-\geometry{paperwidth=\mypaperwidth,paperheight=0.7\mypaperwidth}
+%\geometry{paperwidth=\mypaperwidth,paperheight=0.7\mypaperwidth}
+\geometry{paperwidth=\mypaperwidth,paperheight=0.625\mypaperwidth} % 16:10
+%\geometry{paperwidth=\mypaperwidth,paperheight=0.5625\mypaperwidth} % 16:9
 
-\title[Proposal: Minimal Migration of IceTrayCombo from SVN to Git, \url{https://github.com/fiedl/icecube-git-migration/issues/9}]{Proposal: Minimal Migration of IceTrayCombo from SVN to Git}
-\subtitle{Software Call 2020-03-17}
-\date{\today \\ \vspace*{2mm} \tiny{Document 2020-nie9Ook9} \normalsize}
+\title{Goals and choices regarding the migration to github}
+\subtitle{Software Call 2020-10-27}
+\date{\today \\ \vspace*{2mm} \tiny{Document 2020-Wa6hohfe} \normalsize}
 
 \author[Sebastian Fiedlschuster]{Sebastian Fiedlschuster \\ \small\url{https://github.com/fiedl/icecube-git-migration} \\
 \small\url{sebastian.fiedlschuster@fau.de}}
@@ -30,6 +31,7 @@
 
 \input{lib/graphics}
 \input{lib/tikz}
+\input{lib/tikz_chord_diagram}
 \input{lib/listings}
 \input{lib/tabular}
 \input{lib/beamer}
@@ -59,24 +61,27 @@
 
 \section{Introduction}
 \input{text/prefix}
-\input{text/motivation}
+%\input{text/motivation}
 
-\section{Proposal}
-\subsection{Goal}\input{text/goal}
-\subsection{Choices}\input{text/choices}
-\subsection{Pros and Cons}\input{text/pros}
-\input{text/cons}
-\subsection{Tests}\input{text/tests}
+% \section{Goals and Choices} --> moved into `text/decisions_chord_chart`
+\input{text/decisions_chord_chart}
 
-\subsection{Planned steps}
-\input{text/local_changes}
-\input{text/steps_to_goal}
-\input{text/steps_after_goal}
-
-\section{Conclusion}
-\input{text/next_steps}
+%\section{Proposal}
+%\subsection{Goal}\input{text/goal}
+%\subsection{Choices}\input{text/choices}
+%\subsection{Pros and Cons}\input{text/pros}
+%\input{text/cons}
+%\subsection{Tests}\input{text/tests}
+%
+%\subsection{Planned steps}
+%\input{text/local_changes}
+%\input{text/steps_to_goal}
+%\input{text/steps_after_goal}
+%
+%\section{Conclusion}
+%\input{text/next_steps}
 \input{text/thanks}
-
+%
 \appendix
 \section{Backup slides}
 \input{text/wishlist_nathan}
