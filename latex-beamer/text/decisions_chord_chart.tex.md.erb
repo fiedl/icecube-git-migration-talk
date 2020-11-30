@@ -70,18 +70,18 @@
   #
   def choice_diagram(highlight: "", empty: false)
     exclusions = {
-      bisection: %w(rebase push_to_master),
-      blame: %w(squash),
-      conflict_resolution: %w(rebase squash rewrite),
-      commit_ids: %w(rebase squash rewrite),
+      bisection: %w(rebase push_to_master enforce_linear),
+      blame: %w(squash enforce_linear),
+      conflict_resolution: %w(rebase squash rewrite enforce_linear),
+      commit_ids: %w(rebase squash rewrite enforce_linear),
       changelogs: %w(),
-      easy_workflow: %w(push_to_master strict_git_flow rewrite),
-      robust_workflow: %w(push_to_master rewrite),
+      easy_workflow: %w(push_to_master strict_git_flow rewrite enforce_linear),
+      robust_workflow: %w(push_to_master rewrite enforce_linear),
       quick_migration: %w(strict_git_flow),
       avoid_large_files: %w(push_to_master),
       avoid_rename_master: %w(push_to_master rewrite),
       ci: %w(rewrite),
-      feature_collaboration: %w(),
+      feature_collaboration: %w(enforce_linear),
       code_reviews: %w()
     }
 
@@ -123,6 +123,7 @@
             rebase: "Allow rebase?",
             squash: "Allow squash?",
             merge: "Allow merge?",
+            enforce_linear: "Enforce linear history?"
           }
 
           # Calculate the sizes and positions for the decisions:
