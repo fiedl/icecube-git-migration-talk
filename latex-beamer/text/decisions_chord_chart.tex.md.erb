@@ -739,15 +739,19 @@
   \begin{column}{0.5\textwidth}
     \begin{tikzpicture}
       % Git merge
-      \only<1->{
+      \only<1-2>{
         \gitDAG{
           A -- B -- { E [xshift=2.5cm] ,
             C -- D}
         };
+      }
+      \only<1-2>{
         \gitbranch{master}{above = of E}{E};
+      }
+      \only<1>{
         \gitbranch{feature}{below = of D}{D};
       }
-      \only<2->{
+      \only<2>{
         \gitDAG{
           A -- B -- { E [xshift=2.5cm] ,
             C -- D -- F},
@@ -763,7 +767,7 @@
             E -- F
         };
         \gitbranch{feature}{below = of F}{F};
-        \gitbranch{master}{below = of feature}{F};
+        \gitbranch{master}{below = of feature}{feature};
       }
     \end{tikzpicture}
 
