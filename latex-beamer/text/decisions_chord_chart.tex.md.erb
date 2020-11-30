@@ -52,7 +52,7 @@
       opacity ||= 0.05
     end
     # upper_effects = %w(bisection conflict_resolution commit_ids changelogs easy_workflow robust_workflow)
-    # upper_choices = %w(rebase squash merge push_to_master)
+    # upper_choices = %w(rebase squash merge push_to_main)
     # if upper_effects.include?(effect.to_s) and upper_choices.include?(choice.to_s)
     #   "\\arcupper{#{effect}}{#{choice}}{#{opacity}}{#{color}}"
     # elsif !upper_effects.include?(effect.to_s) and !upper_choices.include?(choice.to_s)
@@ -70,16 +70,16 @@
   #
   def choice_diagram(highlight: "", empty: false)
     exclusions = {
-      bisection: %w(rebase push_to_master enforce_linear),
+      bisection: %w(rebase push_to_main enforce_linear),
       blame: %w(squash enforce_linear),
       conflict_resolution: %w(rebase squash rewrite enforce_linear),
       commit_ids: %w(rebase squash rewrite enforce_linear),
       changelogs: %w(),
-      easy_workflow: %w(push_to_master strict_git_flow rewrite enforce_linear),
-      robust_workflow: %w(push_to_master rewrite enforce_linear),
+      easy_workflow: %w(push_to_main strict_git_flow rewrite enforce_linear),
+      robust_workflow: %w(push_to_main rewrite enforce_linear),
       quick_migration: %w(strict_git_flow),
-      avoid_large_files: %w(push_to_master),
-      avoid_rename_master: %w(push_to_master rewrite),
+      avoid_large_files: %w(push_to_main),
+      avoid_rename_main: %w(push_to_main rewrite),
       ci: %w(rewrite),
       feature_collaboration: %w(enforce_linear),
       code_reviews: %w()
@@ -95,7 +95,7 @@
           % \\decision{118}{100}{rebase}{Allow rebase}
           % \\decision{138}{120}{squash}{Allow squash}
           % \\decision{158}{140}{merge}{Allow merge}
-          % \\decision{190}{160}{push_to_master}{Allow direct pushes to master}
+          % \\decision{190}{160}{push_to_main}{Allow direct pushes to main}
           % \\decision{192}{214}{strict_git_flow}{Require strict git flow}
           % \\decision{216}{238}{rewrite}{Allow history rewrites}
           % \\decision{240}{260}{pull_requests}{Allow pull requests}
@@ -108,7 +108,7 @@
           % \\effect{11}{5}{0}           {robust_workflow}       {Robust workflow
           % \\effect{-13}{-8}{-2}        {quick_migration}       {Quick migration
           % \\effect{-26}{-21}{-15}      {avoid_large_files}     {Avoid committing of large files
-          % \\effect{-39}{-34}{-28}      {avoid_rename_master}   {Avoid renaming master
+          % \\effect{-39}{-34}{-28}      {avoid_rename_main}   {Avoid renaming main
           % \\effect{-52}{-47}{-41}      {ci}                    {Continuous tests
           % \\effect{-65}{-60}{-54}      {feature_collaboration} {Easy feature collaboration
           % \\effect{-78}{-73}{-67}      {code_reviews}          {Easy code reviews
@@ -118,7 +118,7 @@
           decisions = {
             pull_requests: "Allow pull requests?",
             strict_git_flow: "Require strict git flow?",
-            push_to_master: "Allow direct pushes to master?",
+            push_to_main: "Allow direct pushes to main?",
             rewrite: "Allow history rewrites?",
             rebase: "Allow rebase?",
             squash: "Allow squash?",
@@ -165,7 +165,7 @@
             robust_workflow: "Robust workflow",
             quick_migration: "Quick migration",
             avoid_large_files: "Avoid committing of large files",
-            avoid_rename_master: "Avoid renaming master",
+            avoid_rename_main: "Avoid renaming main",
             ci: "Continuous tests",
             feature_collaboration: "Easy feature collaboration",
             code_reviews: "Easy code reviews"
@@ -276,7 +276,7 @@
           \item \normalsize Allow \choice{rebasing commits} \footnotesize when merging pull requests?
           \item \normalsize Allow \choice{squash commits} \footnotesize when merging pull requests?
           \item \normalsize Allow \choice{merge commits} \footnotesize when merging pull requests?
-          \item \normalsize Allow direct \choice{pushes to `master`} \footnotesize for all users?
+          \item \normalsize Allow direct \choice{pushes to `main`} \footnotesize for all users?
           \item \normalsize \choice{Strictly} require to follow \choice{\textit{git flow}}?
           \item Allow history \choice{rewrites}?
           \item Allow github's \choice{pull-request} workflow?
@@ -297,7 +297,7 @@
       \scriptsize
       %\item From the software calls and the slack discussion, some of our \goals would be:
       %  \begin{itemize}
-          \item Enable \goal{`git bisect`} on the `master` branch
+          \item Enable \goal{`git bisect`} on the `main` branch
           \item Use \goal{`git blame`} to find the context of a changed line
           \item Utilize git's advanced auto \goal{conflict resolution}
           \item Enable \goal{reproducing} results (simulations, plots) by using the same code base identified by git's \goal{commit ids}.
@@ -306,7 +306,7 @@
           \item \goal{Robust} workflow: Don't break stuff. Don't create frustration. Don't produce a situation that needs manual clean up.
           \item Get our users \goal{quickly} going after our migration from svn to git
           \item Avoid accidental commits of \goal{large files}
-          \item Avoid \goal{renaming the `master`} branch
+          \item Avoid \goal{renaming the `main`} branch
           \item Check code continuously with \goal{tests}
           \item Check code continuously with \goal{continuous tests}
           \item Enable easy \goal{collaboration on features}
@@ -330,7 +330,7 @@
       \gitDAG{
         A -- B -- C -- D -- E
       };
-      \gitbranch{master}{above = of E}{E};
+      \gitbranch{main}{above = of E}{E};
       \gittag{works here}{below = of A}{A};
       \gittag{?}{below = of B}{B};
       \gittag{?}{below = of C}{C};
@@ -360,15 +360,15 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \item[\fails] \goal{Bisection} $\rightarrow \neg$ \choice{Allow rebase merges for pull requests}
-        because this adds feature-branch commits to the `master` branch, which might include breaking commits, introducing a flapping behavior, which slows down bisection significantly.
-      \item[\fails] \goal{Bisection} $\rightarrow \neg$ \choice{Allow direct pushes to `master`}
-        because direct pushes to `master` would enable people to \hyperlink{slide:rename_master}{rename the `master` branch}. This pollutes the `master` branch with feature-branch commits or even removes commits from the `master`, which prevents bisection on `master`.
+        because this adds feature-branch commits to the `main` branch, which might include breaking commits, introducing a flapping behavior, which slows down bisection significantly.
+      \item[\fails] \goal{Bisection} $\rightarrow \neg$ \choice{Allow direct pushes to `main`}
+        because direct pushes to `main` would enable people to \hyperlink{slide:rename_main}{rename the `main` branch}. This pollutes the `main` branch with feature-branch commits or even removes commits from the `main`, which prevents bisection on `main`.
       \item[\works] \goal{Bisection} does work with \choice{Merge commits}
         because one can skip the commits of the feature branches from bisection using the `--first-parent` parameter.
     \end{itemize}
   \end{column}
 
-  \source{\url{https://github.com/fiedl/icecube-git-migration/issues/11}, \url{https://github.com/fiedl/bisect-only-master-branch-test/issues/2}, \url{https://blog.quantic.edu/2015/02/03/git-bisect-debugging-with-feature-branches/}}
+  \source{\url{https://github.com/fiedl/icecube-git-migration/issues/11}, \url{https://github.com/fiedl/bisect-only-main-branch-test/issues/2}, \url{https://blog.quantic.edu/2015/02/03/git-bisect-debugging-with-feature-branches/}}
 \end{frame}
 
 \begin{frame}[fragile]{Goals: Git blame}
@@ -380,7 +380,7 @@
           D -- E},
           E -- F
       };
-      \gitbranch{master}{above = of F}{F};
+      \gitbranch{main}{above = of F}{F};
       \gittag{Strange line introduced here}{below = of D}{D};
     \end{tikzpicture}
     }
@@ -389,7 +389,7 @@
   \begin{column}{0.55\textwidth}
     \header{What is `git blame`?}
     \begin{itemize}
-      \item Suppose, you are on `master` and find a strange code line in `code.py` you can't make sense of.
+      \item Suppose, you are on `main` and find a strange code line in `code.py` you can't make sense of.
       \item Idea: To get an idea of the \alert{context the line was introduced} in, run `git blame code.py`, which identifies the commit `D` that has introduced the line.
       \item Now look at the commit message of commit `D` and the other changes made in this commit.
     \end{itemize}
@@ -431,9 +431,9 @@
     \begin{itemize}
       \item Git uses a \alert{directed acyclic graph (DAG)} to store which commits a new commit is based on. This makes git very powerful when it comes to resolving merge conflicts automatically.
       \item Suppose, an error is introduced in the `feature-a` branch. The `feature-b` branch is based on the `feature-a` branch and does also include this error.
-        The error is later fixed in `feature-a` and the fix is merged into `master`.
-      \item[\fails] Without the DAG information, git would re-introduce the already fixed error into `master` when merging `feature-b`
-        because it could only compare the two code states of `master` and `feature-b` (\textit{2-way merge}).
+        The error is later fixed in `feature-a` and the fix is merged into `main`.
+      \item[\fails] Without the DAG information, git would re-introduce the already fixed error into `main` when merging `feature-b`
+        because it could only compare the two code states of `main` and `feature-b` (\textit{2-way merge}).
       \item[\works] With the DAG information, the fix takes precedence when merging `feature-b`
         because git compares the changes to the common ancestor commit, which can be determined from the DAG
         (\textit{3-way merge}).
@@ -491,7 +491,7 @@
           D -- E},
           E -- F
       };
-      \gitbranch{master}{above = of F}{F};
+      \gitbranch{main}{above = of F}{F};
       \gittag{e3f64d9}{below = of D}{D};
     \end{tikzpicture}
     }
@@ -535,7 +535,7 @@
 
     \begin{Verbatim}[fontsize=\tiny]
     e3f64d9e  fixing issue
-    0a61924e  Merge branch 'fix' into 'master'
+    0a61924e  Merge branch 'fix' into 'main'
     a91acb11  Working on cable shadows...
     361ad89d  Fix steamshovel
     \end{Verbatim}
@@ -586,7 +586,7 @@
     \begin{itemize}
       \item[\works] \goal{Readable changelogs} go well with \choice{merge commits}, even if the commit messages of the feature branches are less readable.
 
-        In the terminal, one can show only the commits on the `master`
+        In the terminal, one can show only the commits on the `main`
         branch and hide the commits of the feature branches using
         `git log --first-parent`.
 
@@ -595,7 +595,7 @@
     \end{itemize}
   \end{column}
 
-  \source{\url{https://github.com/fiedl/bisect-only-master-branch-test/issues/2}, \url{https://github.com/fiedl/icecube-git-migration/issues/11}, \url{https://github.com/topics/changelog-generator}}
+  \source{\url{https://github.com/fiedl/bisect-only-main-branch-test/issues/2}, \url{https://github.com/fiedl/icecube-git-migration/issues/11}, \url{https://github.com/topics/changelog-generator}}
 \end{frame}
 
 \begin{frame}[fragile]{Goals: Easy workflow}
@@ -618,7 +618,7 @@
             \item Is my change a hot fix?
             \item Is my change a feature?
             \item On which branch do I need to base my work on?
-            \item Do I need to create this pull request against `master`/`dev`/`whatever`?
+            \item Do I need to create this pull request against `main`/`dev`/`whatever`?
             \item Do I need to cherry-pick this patch to some other branch as well?
           \end{itemize}
 
@@ -628,12 +628,12 @@
           \hyperlink{https://guides.github.com/introduction/flow/}{github \choice{pull-request} workflow} would be more approachable for new users.
       }
       \only<2>{
-        \item[\fails] \goal{Easy workflow} $\rightarrow \neg$ \choice{Allow direct pushes to master for all users}
+        \item[\fails] \goal{Easy workflow} $\rightarrow \neg$ \choice{Allow direct pushes to main for all users}
 
         \begin{itemize}
           \item because all users would need to be careful not to
-            \hyperlink{slide:rename_master}{rename the `master` branch} by accident.
-          \item When pushes to `master` are rejected due to commits on `master` created by other users in the meantime,
+            \hyperlink{slide:rename_main}{rename the `main` branch} by accident.
+          \item When pushes to `main` are rejected due to commits on `main` created by other users in the meantime,
             this will create frustration for new users. They will want to publish their changes with minimum effort
             and may even avoid pushing their changes if they find it hard.
         \end{itemize}
@@ -668,11 +668,11 @@
         \item A \goal{robust workflow} would be one that \alert{prevents regular users from causing damage} that
           would require admins to perform \alert{fixes or clean-ups}.
 
-        \item[\fails] \goal{Robust workflow} $\rightarrow \neg$ \choice{Allow direct pushes to master for all users}
+        \item[\fails] \goal{Robust workflow} $\rightarrow \neg$ \choice{Allow direct pushes to main for all users}
         \begin{itemize}
-          \item[\fails] because it would allow anyone to \hyperlink{slide:rename_master}{rename the `master` branch}, which would require clean-up, \choice{history rewrites}, or break \goal{bisection} and \goal{readable changelogs}.
-          \item[\fails] \choice{Pushes to master} circumvent automated checks.
-          \item[\fails] \choice{Pushes to master} are not revertable without \choice{history rewrites}.
+          \item[\fails] because it would allow anyone to \hyperlink{slide:rename_main}{rename the `main` branch}, which would require clean-up, \choice{history rewrites}, or break \goal{bisection} and \goal{readable changelogs}.
+          \item[\fails] \choice{Pushes to main} circumvent automated checks.
+          \item[\fails] \choice{Pushes to main} are not revertable without \choice{history rewrites}.
         \end{itemize}
       }
 
@@ -728,14 +728,14 @@
       \item[\works] Providing a suitable `.gitignore` file can help.
       \item[\works] We can check for large files in \textit{automated checks} when using a \choice{pull-request workflow}.
 
-      \item[\fails] \choice{Allowing direct pushes to master} circumvents automated checks.
+      \item[\fails] \choice{Allowing direct pushes to main} circumvents automated checks.
     \end{itemize}
   \end{column}
 
 \end{frame}
 
-\begin{frame}[fragile]{Goals: Avoid renaming the `master` branch}
-  \label{slide:rename_master}
+\begin{frame}[fragile]{Goals: Avoid renaming the `main` branch}
+  \label{slide:rename_main}
 
   \begin{columns}
   \begin{column}{0.5\textwidth}
@@ -748,7 +748,7 @@
         };
       }
       \only<1-2>{
-        \gitbranch{master}{above = of E}{E};
+        \gitbranch{main}{above = of E}{E};
       }
       \only<1>{
         \gitbranch{feature}{below = of D}{D};
@@ -759,7 +759,7 @@
             C -- D -- F},
             E -- F
         };
-        \gitbranch{master}{above = of E}{E};
+        \gitbranch{main}{above = of E}{E};
         \gitbranch{feature}{below = of F}{F};
       }
       \only<3->{
@@ -769,28 +769,28 @@
             E -- F
         };
         \gitbranch{feature}{below = of F}{F};
-        \gitbranch{master}{below = of feature}{feature};
+        \gitbranch{main}{below = of feature}{feature};
       }
     \end{tikzpicture}
 
     \only<4>{
-      \vspace{1cm} The `master` branch now contains the commits `A B C D F` rather than `A B E`.
+      \vspace{1cm} The `main` branch now contains the commits `A B C D F` rather than `A B E`.
 
       \vspace{1em} This breaks \goal{bisection} and \goal{readable changelogs}.
     }
   \end{column}
   \begin{column}{0.5\textwidth}
-    \header{What is renaming the `master` branch?}
+    \header{What is renaming the `main` branch?}
 
     \begin{itemize}
-      \item<1->Consider a `master` branch and a `feature` branch.
-      \item<2->The author of the `feature` branch pulls in the `master` branch to get the changes that have been committed to the `master` branch in the meantime:
+      \item<1->Consider a `main` branch and a `feature` branch.
+      \item<2->The author of the `feature` branch pulls in the `main` branch to get the changes that have been committed to the `main` branch in the meantime:
 
         `git checkout feature` \\
-        `git merge master`
-      \item<3-> The author of the `feature` branch merges his feature branch in to `master`, which would be a fast-forward merge at this point.
+        `git merge main`
+      \item<3-> The author of the `feature` branch merges his feature branch in to `main`, which would be a fast-forward merge at this point.
 
-        `git checkout master` \\
+        `git checkout main` \\
         `git merge feature`
     \end{itemize}
   \end{column}
@@ -798,16 +798,16 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{Goals: Avoid renaming the `master` branch}
+\begin{frame}[fragile]{Goals: Avoid renaming the `main` branch}
 
   \begin{column}{0.45\textwidth}
-    <%= choice_diagram highlight: "avoid_rename_master" %>
+    <%= choice_diagram highlight: "avoid_rename_main" %>
   \end{column}
   \begin{column}{0.55\textwidth}
     \begin{itemize}
-      \item[\works] Using a \choice{standard pull-request workflow} does not allow to \goal{rename the `master` branch}.
-      \item[\fails] \choice{Allowing direct pushes to master} allows to \goal{rename the `master` branch}.
-      \item[\fails] \choice{Rewriting history}, strictly speaking, also \goal{renames the `master` branch} because it moves the `master` branch label to another commit.
+      \item[\works] Using a \choice{standard pull-request workflow} does not allow to \goal{rename the `main` branch}.
+      \item[\fails] \choice{Allowing direct pushes to main} allows to \goal{rename the `main` branch}.
+      \item[\fails] \choice{Rewriting history}, strictly speaking, also \goal{renames the `main` branch} because it moves the `main` branch label to another commit.
     \end{itemize}
   \end{column}
 
@@ -822,7 +822,7 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \item Using \goal{continuous tests} that run on each commit and on each \choice{pull request} before merging help
-        to avoid or \alet{resolve issues before landing in the `master`} branch.
+        to avoid or \alet{resolve issues before landing in the `main`} branch.
       \item Test results are archived and can be accessed from the commits or pull requests.
 
       \item[\fails] \choice{Rewriting history} destroys the references between commits and the \goal{continuous test} runs. So we would lose the information on which commits the tests succeeded. Or we would have to re-run the tests on all commits of the new history.
@@ -863,7 +863,7 @@
   \begin{column}{0.55\textwidth}
     \begin{itemize}
       \item[\works] \goal{Code reviews} are baked into the \choice{standard github pull-request workflow}.
-      \item[\fails] \goal{Code reviews} don't work for \choice{pushing code directly to the `master` branch}.
+      \item[\fails] \goal{Code reviews} don't work for \choice{pushing code directly to the `main` branch}.
     \end{itemize}
   \end{column}
 
@@ -885,13 +885,13 @@
       <%= choice_diagram highlight: "bisection conflict_resolution commit_ids changelogs robust_workflow easy_workflow quick_migration" %>
     }
     \only<4>{
-      <%= choice_diagram highlight: "bisection blame conflict_resolution commit_ids changelogs easy_workflow robust_workflow quick_migration avoid_large_files avoid_rename_master ci feature_collaboration code_reviews" %>
+      <%= choice_diagram highlight: "bisection blame conflict_resolution commit_ids changelogs easy_workflow robust_workflow quick_migration avoid_large_files avoid_rename_main ci feature_collaboration code_reviews" %>
     }
   \end{column}
   \begin{column}{0.55\textwidth}
     \header{To which choices do these goals lead us?}
     \begin{itemize}
-      \item<1-> Aiming for a \goal{robust workflow}, we need to \choice{forbid history rewrites} and \choice{restrict or forbid direct pushes to the `master` branch}.
+      \item<1-> Aiming for a \goal{robust workflow}, we need to \choice{forbid history rewrites} and \choice{restrict or forbid direct pushes to the `main` branch}.
         \tiny (Slide \ref{slide:robust_workflow}) \normalsize
 
       \item<2-> Aiming for \goal{bisection}, \goal{auto conflict resolution} and \goal{reproducibility} requires us to \choice{deactivating rebase pull requests} and preferring \choice{merge-commit pull requests} over \choice{squash-commit pull requests}.
