@@ -366,9 +366,11 @@
     <%= choice_diagram highlight: "bisection" %>
   \end{column}
   \begin{column}{0.55\textwidth}
+    \small
     \begin{itemize}
       \item[\fails] \goal{Bisection} $\rightarrow \neg$ \choice{Allow rebase merges for pull requests}
         because this adds feature-branch commits to the `main` branch, which might include breaking commits, introducing a flapping behavior, which slows down bisection significantly.
+      \item[\fails] This also means that we then can't use rebases to \choice{enforce linear history}.
       \item[\fails] \goal{Bisection} $\rightarrow \neg$ \choice{Allow direct pushes to `main`}
         because direct pushes to `main` would enable people to \hyperlink{slide:rename_main}{rename the `main` branch}. This pollutes the `main` branch with feature-branch commits or even removes commits from the `main`, which prevents bisection on `main`.
       \item[\works] \goal{Bisection} does work with \choice{Merge commits}
@@ -399,7 +401,7 @@
     \header{What is `git blame`?}
     \begin{itemize}
       \item Suppose, you are on `main` and find a strange code line in `code.py` you can't make sense of.
-      \item Idea: To get an idea of the \alert{context the line was introduced} in, run `git blame code.py`, which identifies the commit `D` that has introduced the line.
+      \item Idea: To get an idea of the \alert{context the line was introduced} in, run `git blame code.py`, which helps you to identify the commit `D` that has introduced the line.
       \item Now look at the commit message of commit `D` and the other changes made in this commit.
     \end{itemize}
   \end{column}
@@ -418,6 +420,7 @@
       \item[\fails] When using \goal{`git blame`} with \choice{squash commits}, the summary commit (`F` in the example)
         is the commit returned by `git blame`. If there are many changes, this context might not be specific enough to
         make sense of the line in question.
+      \item[\fails] This also means that we lose this detailed `git blame` if we use squash commits to \choice{enforce linear history}.
       \item[\works] When using \goal{`git blame`} with \choice{merge commits}, the specific commit introducing the line
         in question can be found.
       \item[\works] The \goal{`git blame`} behavior of squash commits, i.e. returning the summary commit,
@@ -435,14 +438,18 @@
 
   \begin{column}{0.4\textwidth}
     \includegraphics[width=\columnwidth]{img/merge-test-question}
+
+    \vspace{3cm}
+    \alert{Real-world} example: You open a pull request and need to \alert{base other work} on that feature branch \alert{while waiting} for pull-request approval.
   \end{column}
   \begin{column}{0.6\textwidth}
     \header{What is automatic conflict resolution?}
+    \small
     \begin{itemize}
       \item Git uses a \alert{directed acyclic graph (DAG)} to store which commits a new commit is based on. This makes git very powerful when it comes to resolving merge conflicts automatically.
       \item Suppose, an error is introduced in the `feature-a` branch. The `feature-b` branch is based on the `feature-a` branch and does also include this error.
         The error is later fixed in `feature-a` and the fix is merged into `main`.
-      \item[\fails] Without the DAG information, git would re-introduce the already fixed error into `main` when merging `feature-b`
+      \item[\fails] Without the DAG information, git would \alert{re-introduce} the already \alert{fixed error} into `main` when merging `feature-b`
         because it could only compare the two code states of `main` and `feature-b` (\textit{2-way merge}).
       \item[\works] With the DAG information, the fix takes precedence when merging `feature-b`
         because git compares the changes to the common ancestor commit, which can be determined from the DAG
@@ -463,7 +470,9 @@
     \begin{itemize}
       \only<1>{
         \item[\fails] \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow rebase merges}
-        \item[\fails] \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow squash merges} \\
+        \item[\fails] \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow squash merges}
+        \item[\fails] \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Enforce linear history}
+
         because rebase commits and squash commits do not keep the graph dependency information to the commits in the feature branch. If one would base work onto commits from the feature branch, conflicts could not be resolved automatically, later.
 
         \tiny \vspace{1em} Experiment: \url{https://github.com/fiedl/icecube-git-migration/issues/15}
@@ -473,7 +482,8 @@
         \end{center}
       }
       \only<2>{
-        \item \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow history rewrites} \\
+        \item \goal{Auto conflict resolution} $\rightarrow \neg$ \choice{Allow history rewrites}
+
         because this destroys the dependency information to any own work in cloned repositories.
 
         We would need to make sure that \emph{everyone} re-clones the repo and re-commits his own work before creating a pull request. Otherwise, git can't resolve the dependencies and merge the pull request.
@@ -529,14 +539,17 @@
     \begin{itemize}
       \item[\fails] \goal{Reproducibility} $\rightarrow \neg$ \choice{Allow rebase merges for pull requests}
       \item[\fails] \goal{Reproducibility} $\rightarrow \neg$ \choice{Allow squash merges for pull requests}
-      \item[\fails] \goal{Reproducibility} $\rightarrow \neg$ \choice{History rewrites} \\
-        because the original commits can become dangling (\textit{unreachable}) and than be removed by garbage collection. Then, they the original commits cannot be accessed anymore.
+      \item[\fails] \goal{Reproducibility} $\rightarrow \neg$ \choice{Enforce linear history}
+      \item[\fails] \goal{Reproducibility} $\rightarrow \neg$ \choice{History rewrites}
+
+      because the original commits can become dangling (\textit{unreachable}) and than be removed by garbage collection. Then, they the original commits cannot be accessed anymore.
+
+      \scriptsize See also: \url{https://github.com/fiedl/icecube-git-migration/issues/18}
     \end{itemize}
   \end{column}
 
   \source{\url{https://git-scm.com/docs/git-gc}}
 \end{frame}
-
 
 \section{Readable changelogs}
 \begin{frame}[fragile]{Goals: Readable changelogs}
@@ -643,6 +656,7 @@
           \hyperlink{https://guides.github.com/introduction/flow/}{github \choice{pull-request} workflow} would be more approachable for new users.
       }
       \only<2>{
+        \small
         \item[\fails] \goal{Easy workflow} $\rightarrow \neg$ \choice{Allow direct pushes to main for all users}
 
         \begin{itemize}
@@ -654,9 +668,38 @@
         \end{itemize}
 
         \item[\works] With a standard \hyperlink{https://guides.github.com/introduction/flow/}{github \choice{pull-request} workflow}, these problems do not arise.
+
+        \item[\follows] Nathan: Allow commits to `main`, but encourage to use pull requests (\textit{"if you don't know what you are doing and why, do this"}).
+        \item[\follows] Clear guides, screencasts
+        \normalsize
       }
 
-      \only<3>{
+    \end{itemize}
+  \end{column}
+
+  \source{\url{https://nvie.com/posts/a-successful-git-branching-model/}, \\ \url{https://guides.github.com/introduction/flow/}}
+\end{frame}
+
+\begin{frame}[fragile]{Goals: Easy workflow}
+  \begin{center}
+    \includegraphics[width=\0.5\textwidth]{img/github-desktop-sync-button}
+
+    \begin{itemize}
+      \item Note: Clicking the \textit{Sync} button on the github application will push directly to `main` if not protected and not switched to another branch.
+      \item[\follows] Need to watch out for problems
+    \end{itemize}
+
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Goals: Easy workflow}
+  \label{slide:easy_workflow}
+
+  \begin{column}{0.45\textwidth}
+    <%= choice_diagram highlight: "easy_workflow" %>
+  \end{column}
+  \begin{column}{0.55\textwidth}
+    \begin{itemize}
         \item[\fails] \goal{Easy workflow} $\rightarrow \neg$ \choice{History rewrites}
 
         \begin{itemize}
@@ -664,13 +707,11 @@
           \item `git pull` will be rejected without obvious reason.
           \item Transferring existing commits to the new history works, but requires manual management of \textit{branches} or \textit{remotes} (not easy).
         \end{itemize}
-      }
     \end{itemize}
   \end{column}
 
-  \source{\url{https://nvie.com/posts/a-successful-git-branching-model/}, \url{https://guides.github.com/introduction/flow/}}
+  \source{\url{https://nvie.com/posts/a-successful-git-branching-model/}, \\ \url{https://guides.github.com/introduction/flow/}}
 \end{frame}
-
 
 \section{Robust workflow}
 \begin{frame}[fragile]{Goals: Robust workflow}
@@ -691,9 +732,11 @@
           \item[\fails] \choice{Pushes to main} circumvent automated checks.
           \item[\fails] \choice{Pushes to main} are not revertable without \choice{history rewrites}.
         \end{itemize}
+        \item \underline{But}: \choice{Preventing pushes to `main`} could also cause friction $\rightarrow$ need good guides
       }
 
       \only<2>{
+        \item[\fails] In the same sense, \choice{enforcing linear histories} also causes friction. Worst case: Parallel, long-lived forks and long-term fragmentation.
         \item[\fails] \goal{Robust workflow} $\rightarrow \neg$ \choice{Allow history rewrites}
 
         \begin{itemize}
@@ -706,7 +749,6 @@
   \end{column}
 
 \end{frame}
-
 
 \section{Quick migration}
 \begin{frame}[fragile]{Goals: Quick migration}
@@ -754,7 +796,6 @@
   \end{column}
 
 \end{frame}
-
 
 \section{Avoid renaming the `main` branch}
 \begin{frame}[fragile]{Goals: Avoid renaming the `main` branch}
@@ -873,13 +914,13 @@
           \begin{quote}
             Do not rebase commits that exist outside your repository and that people may have based work on. ... If you don’t, people will hate you, and you’ll be scorned by friends and family.
           \end{quote}
-        \tiny \url{https://git-scm.com/book/en/v2/Git-Branching-Rebasing#_rebase_peril}
+        \tiny \url{https://git-scm.com/book/en/v2/Git-Branching-Rebasing#_rebase_peril} \normalsize
 
+      \item[\fails] This is also a scenario where \choice{\underline{enforcing} linear history} would do more harm than good because this would break the dependency graph $\rightarrow$ need to be much more careful, not easy.
     \end{itemize}
   \end{column}
 
 \end{frame}
-
 
 \section{Easy code reviews}
 \begin{frame}[fragile]{Goals: Easy code reviews}
@@ -920,7 +961,7 @@
   \begin{column}{0.55\textwidth}
     \header{To which choices do these goals lead us?}
     \begin{itemize}
-      \item<1-> Aiming for a \goal{robust workflow}, we need to \choice{forbid history rewrites} and \choice{restrict or forbid direct pushes to the `main` branch}.
+      \item<1-> Aiming for a \goal{robust workflow}, we need to \choice{forbid history rewrites} and \choice{forbid, restrict, or at least discourage direct pushes to the `main` branch}.
         \tiny (Slide \ref{slide:robust_workflow}) \normalsize
 
       \item<2-> Aiming for \goal{bisection}, \goal{auto conflict resolution} and \goal{reproducibility} requires us to \choice{deactivating rebase pull requests} and preferring \choice{merge-commit pull requests} over \choice{squash-commit pull requests}.
