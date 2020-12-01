@@ -280,8 +280,10 @@
           \item \normalsize \choice{Strictly} require to follow \choice{\textit{git flow}}?
           \item Allow history \choice{rewrites}?
           \item Allow github's \choice{pull-request} workflow?
+          \item Enforce \choice{linear history}?
         \end{itemize}
       \item Anything missing?
+      \item Lighter versions (\textit{encourage/discourage}) also an option.
     \end{itemize}
   \end{column}
 
@@ -291,6 +293,12 @@
 
   \begin{column}{0.45\textwidth}
     <%= choice_diagram empty: true %>
+
+    \vfill\scriptsize\vspace{2em}
+    \begin{itemize}
+      \item Anything missing?
+      \item Can weight those later.
+    \end{itemize}
   \end{column}
   \begin{column}{0.55\textwidth}
     \begin{itemize}
@@ -308,7 +316,6 @@
           \item Avoid accidental commits of \goal{large files}
           \item Avoid \goal{renaming the `main`} branch
           \item Check code continuously with \goal{tests}
-          \item Check code continuously with \goal{continuous tests}
           \item Enable easy \goal{collaboration on features}
           \item Enable easy \goal{code reviews}
       %  \end{itemize}
